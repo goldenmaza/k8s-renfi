@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- +===================================== -->
+    <!-- | Section 1: Parent inclusion          -->
+    <!-- +===================================== -->
+<!--    <parent>-->
+<!--        <groupId></groupId>-->
+<!--        <artifactId></artifactId>-->
+<!--        <version></version>-->
+<!--    </parent>-->
+
+    <!-- +===================================== -->
+    <!-- | Section 2: Project information       -->
+    <!-- +===================================== -->
+    <groupId>org.hellstrand</groupId>
+    <artifactId>k8s-renfi</artifactId>
+    <version>${revision}${changelist}</version>
+    <name>k8s-renfi</name>
+    <description>A modern k8s application for processing media files.</description>
+    <packaging>pom</packaging>
+
+    <!-- +===================================== -->
+    <!-- | Section 3: Modules                   -->
+    <!-- +===================================== -->
+    <modules>
+        <module>instructor</module>
+        <module>executor</module>
+        <module>shared</module>
+    </modules>
+
+    <!-- +===================================== -->
+    <!-- | Section 4: Properties                -->
+    <!-- +===================================== -->
+    <properties>
+        <revision>0.1.0</revision>
+        <changelist>-SNAPSHOT</changelist>
+
+        <!-- Project configurations -->
+        <java.version>25</java.version>
+        <maven.compiler.release>25</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Internal dependencies -->
+        <!-- External dependencies -->
+        <spring-boot-dependencies.version>4.1.2</spring-boot-dependencies.version>
+        <kafka-clients.version>4.4.0</kafka-clients.version>
+
+        <!-- Plugins -->
+        <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.6.1</maven-surefire-plugin.version>
+
+        <!-- CVE vulnerabilities -->
+        <logback-cve.version>1.6.6</logback-cve.version>
+    </properties>
+
+    <!-- +===================================== -->
+    <!-- | Section 5: DependencyManagement      -->
+    <!-- +===================================== -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- +===================================== -->
+            <!-- | CVE vulnerabilities                  -->
+            <!-- +===================================== -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback-cve.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback-cve.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <!-- +===================================== -->
+            <!-- | Internal dependencies                -->
+            <!-- +===================================== -->
+            <!-- +===================================== -->
+            <!-- | External dependencies                -->
+            <!-- +===================================== -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka-clients.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- +===================================== -->
+    <!-- | Section 6: Dependencies              -->
+    <!-- +===================================== -->
+    <dependencies>
+    </dependencies>
+
+    <!-- +===================================== -->
+    <!-- | Section 7: Build                     -->
+    <!-- +===================================== -->
+    <build>
+        <!-- +===================================== -->
+        <!-- | PluginManagement                     -->
+        <!-- +===================================== -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <!-- +===================================== -->
+        <!-- | Plugins                              -->
+        <!-- +===================================== -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- +===================================== -->
+    <!-- | Section 8: Profiles                  -->
+    <!-- +===================================== -->
+    <profiles>
+    </profiles>
+
+</project>

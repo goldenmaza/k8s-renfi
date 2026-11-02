@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- +======================================= -->
+    <!-- | Section 1: Parent inclusion            -->
+    <!-- +======================================= -->
+    <parent>
+        <groupId>org.hellstrand</groupId>
+        <artifactId>k8s-renfi</artifactId>
+        <version>${revision}${changelist}</version>
+    </parent>
+
+    <!-- +===================================== -->
+    <!-- | Section 2: Module information        -->
+    <!-- +===================================== -->
+    <artifactId>k8s-renfi-shared</artifactId>
+    <name>k8s-renfi-shared</name>
+    <description>The module provides a centralized library of shared Data Transfer Objects (DTOs), database
+        entities, and common repository interfaces to ensure consistency across all microservices.
+    </description>
+    <packaging>jar</packaging>
+
+    <!-- +===================================== -->
+    <!-- | Section 3: Properties                -->
+    <!-- +===================================== -->
+    <properties>
+    </properties>
+
+    <!-- +============================================== -->
+    <!-- | Section 4: Dependencies (module specific)     -->
+    <!-- +============================================== -->
+    <dependencies>
+        <!-- +===================================== -->
+        <!-- | Internal dependencies                -->
+        <!-- +===================================== -->
+        <!-- +===================================== -->
+        <!-- | External dependencies                -->
+        <!-- +===================================== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- +======================================= -->
+    <!-- | Section 5: Build (module specific)     -->
+    <!-- +======================================= -->
+    <build>
+        <finalName>${project.artifactId}</finalName>
+
+        <!-- +===================================== -->
+        <!-- | Plugins (module specific)            -->
+        <!-- +===================================== -->
+    </build>
+
+    <!-- +======================================== -->
+    <!-- | Section 6: Profiles (module specific)   -->
+    <!-- +======================================== -->
+    <profiles>
+    </profiles>
+
+</project>

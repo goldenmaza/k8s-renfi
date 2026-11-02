@@ -1,0 +1,23 @@
+#############
+## Java
+#############
+*.class
+*.jar
+
+#############
+## Maven
+#############
+target/
+
+#############
+## Intellij
+#############
+.idea/
+out/
+*.iml
+
+#############
+## Misc
+#############
+**/.flattened-pom.xml
+.flattened-pom.xml
