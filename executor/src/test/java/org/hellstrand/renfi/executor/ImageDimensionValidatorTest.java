@@ -16,7 +16,7 @@ public class ImageDimensionValidatorTest {
         var imageDimensionValidator = new ImageDimensionValidator();
 
         // Act
-        var dimensionsMatch = imageDimensionValidator.compareDimensions(primaryImage, secondaryImage);
+        var dimensionsMatch = imageDimensionValidator.areDimensionsIdentical(primaryImage, secondaryImage);
 
         // Assert
         assertTrue(dimensionsMatch, "The images do not have identical dimensions (width & height).");
@@ -30,7 +30,7 @@ public class ImageDimensionValidatorTest {
         var imageDimensionValidator = new ImageDimensionValidator();
 
         // Act
-        var dimensionsMatch = imageDimensionValidator.compareDimensions(primaryImage, secondaryImage);
+        var dimensionsMatch = imageDimensionValidator.areDimensionsIdentical(primaryImage, secondaryImage);
 
         // Assert
         assertFalse(dimensionsMatch, "The images do have identical dimensions (width & height), but they shouldn't.");
