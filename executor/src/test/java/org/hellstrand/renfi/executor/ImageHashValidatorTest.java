@@ -27,10 +27,10 @@ public class ImageHashValidatorTest {
         var imageHashValidator = new ImageHashValidator();
 
         // Act
-        var hashMatch = imageHashValidator.compareHash(primaryImage, secondaryImage);
+        var areLikelyDuplicates = imageHashValidator.arePerceptuallySimilar(primaryImage, secondaryImage);
 
         // Assert
-        assertTrue(hashMatch, "The images should not match as they have colour differences.");
+        assertTrue(areLikelyDuplicates, "The images should not match as they have colour differences.");
     }
 
     @Test
@@ -49,9 +49,9 @@ public class ImageHashValidatorTest {
         var imageHashValidator = new ImageHashValidator();
 
         // Act
-        var hashMatch = imageHashValidator.compareHash(primaryImage, secondaryImage);
+        var areLikelyDuplicates = imageHashValidator.arePerceptuallySimilar(primaryImage, secondaryImage);
 
         // Assert
-        assertFalse(hashMatch, "The images should NOT have matched, but they did.");
+        assertFalse(areLikelyDuplicates, "The images should NOT have matched, but they did.");
     }
 }

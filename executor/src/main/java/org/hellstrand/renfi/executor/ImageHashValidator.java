@@ -8,7 +8,7 @@ public class ImageHashValidator {
     private static final short TARGET_WIDTH = 8;
     private static final int TARGET_DIMENSION = TARGET_HEIGHT * TARGET_WIDTH;
 
-    public boolean compareHash(BufferedImage primaryImage, BufferedImage secondaryImage) {
+    public boolean arePerceptuallySimilar(BufferedImage primaryImage, BufferedImage secondaryImage) {
         // Calculate average hash values...
         long primaryHash = calculateAverageHash(primaryImage);
         long secondaryHash = calculateAverageHash(secondaryImage);
