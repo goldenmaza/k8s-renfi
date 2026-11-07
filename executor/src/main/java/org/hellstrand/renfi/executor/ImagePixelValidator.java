@@ -3,13 +3,15 @@ package org.hellstrand.renfi.executor;
 import java.awt.image.BufferedImage;
 
 public class ImagePixelValidator {
-    public boolean arePixelsWithinBoundary(BufferedImage primaryImage, BufferedImage secondaryImage, double boundary) {
-        var primaryHeight = primaryImage.getHeight();
-        var primaryWidth = primaryImage.getWidth();
+    private static final int MAX_COLOR = 255;
+    private static final int RGB_CHANNELS = 3;
+
+    public boolean arePixelsWithinBoundary(final BufferedImage primaryImage, final BufferedImage secondaryImage, final double boundary) {
+        final var primaryHeight = primaryImage.getHeight();
+        final var primaryWidth = primaryImage.getWidth();
+        final var totalPixels = primaryHeight * primaryWidth;
 
         var pixelDifference = 0;
-        var totalPixels = primaryHeight * primaryWidth;
-        var maxColourIntensity = 255 * 3; // max colour per pixel * R + G + B
         for (var y = 0; y < primaryHeight; y++) {
             for (var x = 0; x < primaryWidth; x++) {
                 var primaryRGB = primaryImage.getRGB(x, y);
@@ -28,10 +30,10 @@ public class ImagePixelValidator {
             }
         }
 
-        // Determine layeredPixels for calculating the percentage...
-        var layeredPixels = totalPixels * maxColourIntensity;
-        var percentageDifference = (double) pixelDifference / layeredPixels;
+        // Determine normalizationFactor for calculating the percentage...
+        final var normalizationFactor = totalPixels * MAX_COLOR * RGB_CHANNELS;
+        final var percentage = (double) pixelDifference / normalizationFactor;
 
-        return percentageDifference <= boundary;
+        return percentage <= boundary;
     }
 }
