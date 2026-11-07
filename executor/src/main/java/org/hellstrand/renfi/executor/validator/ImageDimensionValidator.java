@@ -1,4 +1,4 @@
-package org.hellstrand.renfi.executor;
+package org.hellstrand.renfi.executor.validator;
 
 import java.awt.image.BufferedImage;
 
