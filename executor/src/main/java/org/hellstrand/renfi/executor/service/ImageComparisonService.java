@@ -12,15 +12,16 @@ public class ImageComparisonService {
     private final ImagePixelValidator imagePixelValidator;
 
     public ImageComparisonService(
-            ImageDimensionValidator imageDimensionValidator,
-            ImageHashValidator imageHashValidator,
-            ImagePixelValidator imagePixelValidator) {
+            final ImageDimensionValidator imageDimensionValidator,
+            final ImageHashValidator imageHashValidator,
+            final ImagePixelValidator imagePixelValidator) {
         this.imageDimensionValidator = imageDimensionValidator;
         this.imageHashValidator = imageHashValidator;
         this.imagePixelValidator = imagePixelValidator;
     }
 
-    public boolean areImagesDuplicates(BufferedImage primaryImage, BufferedImage secondaryImage, double boundary) {
+    public boolean areImagesDuplicates(
+            final BufferedImage primaryImage, final BufferedImage secondaryImage, final double boundary) {
         if (!imageDimensionValidator.areDimensionsIdentical(primaryImage, secondaryImage)) {
             return false;
         }

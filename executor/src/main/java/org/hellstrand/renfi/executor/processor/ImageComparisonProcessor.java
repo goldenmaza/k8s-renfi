@@ -17,21 +17,21 @@ import java.util.Objects;
 public class ImageComparisonProcessor {
     private final ImageComparisonService imageComparisonService;
 
-    public ImageComparisonProcessor(ImageComparisonService imageComparisonService) {
+    public ImageComparisonProcessor(final ImageComparisonService imageComparisonService) {
         this.imageComparisonService = imageComparisonService;
     }
 
-    public List<DuplicatePair> processDirectory(String path, List<String> extensions, double boundary) {
+    public List<DuplicatePair> processDirectory(final String path, final List<String> extensions, final double boundary) {
         Objects.requireNonNull(path, "The directory path stated cannot be null.");
         Objects.requireNonNull(extensions, "The list of extensions cannot be null.");
-        List<DuplicatePair> listOfDuplicates = new ArrayList<>();
-        File[] files = loadFiles(path, extensions);
+        final var listOfDuplicates = new ArrayList<DuplicatePair>();
+        final var files = loadFiles(path, extensions);
 
         for (int i = 0; i < files.length; i++) {
             for (int j = i + 1; j < files.length; j++) {
                 try {
-                    var primaryImage = ImageIO.read(files[i]);
-                    var secondaryImage = ImageIO.read(files[j]);
+                    final var primaryImage = ImageIO.read(files[i]);
+                    final var secondaryImage = ImageIO.read(files[j]);
                     if (imageComparisonService.areImagesDuplicates(primaryImage, secondaryImage, boundary)) {
                         listOfDuplicates.add(new DuplicatePair(files[i].getName(), files[j].getName()));
                     }
@@ -45,13 +45,13 @@ public class ImageComparisonProcessor {
         return listOfDuplicates;
     }
 
-    private static File[] loadFiles(String path, List<String> extensions) {
-        File directory = new File(path);
+    private static File[] loadFiles(final String path, final List<String> extensions) {
+        final var directory = new File(path);
         if (!directory.exists() && !directory.isDirectory()) {
             throw new DirectoryUnavailableException(format("No directory found with the stated path: %s", path));
         }
 
-        File[] files = directory.listFiles((_, f) ->
+        final var files = directory.listFiles((_, f) ->
             extensions.stream().anyMatch(e -> f.toLowerCase().endsWith(e))
         );
         if (files == null || files.length < 2) {

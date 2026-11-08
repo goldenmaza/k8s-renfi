@@ -9,7 +9,6 @@ import org.hellstrand.renfi.executor.validator.ImageHashValidator;
 import org.hellstrand.renfi.executor.validator.ImagePixelValidator;
 import org.hellstrand.renfi.shared.exception.DirectoryUnavailableException;
 import org.hellstrand.renfi.shared.exception.InsufficientImagesException;
-import org.hellstrand.renfi.shared.model.DuplicatePair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -42,7 +41,7 @@ public class ImageComparisonProcessorTest {
             var boundary = 0.0;
 
             // Act
-            List<DuplicatePair> listOfDuplicatePair = imageComparisonProcessor.processDirectory(path, listOfExtensions, boundary);
+            var listOfDuplicatePair = imageComparisonProcessor.processDirectory(path, listOfExtensions, boundary);
 
             // Assert
             assertEquals(0, listOfDuplicatePair.size(), "The processor should have found no duplicates, but it didn't.");
@@ -56,7 +55,7 @@ public class ImageComparisonProcessorTest {
             var boundary = 0.0;
 
             // Act
-            List<DuplicatePair> listOfDuplicatePair = imageComparisonProcessor.processDirectory(path, listOfExtensions, boundary);
+            var listOfDuplicatePair = imageComparisonProcessor.processDirectory(path, listOfExtensions, boundary);
 
             // Assert
             assertEquals(2, listOfDuplicatePair.size(), "The processor should have found two duplicate pairs, but it didn't.");

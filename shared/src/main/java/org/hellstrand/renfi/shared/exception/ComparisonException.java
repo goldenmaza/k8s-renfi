@@ -1,11 +1,11 @@
 package org.hellstrand.renfi.shared.exception;
 
 public class ComparisonException extends RuntimeException {
-    public ComparisonException(String message) {
+    public ComparisonException(final String message) {
         super(message);
     }
 
-    public ComparisonException(String message, Throwable cause) {
+    public ComparisonException(final String message, final Throwable cause) {
         super(message, cause);
     }
 }
