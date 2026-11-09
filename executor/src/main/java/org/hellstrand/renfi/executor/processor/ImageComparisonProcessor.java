@@ -45,7 +45,7 @@ public class ImageComparisonProcessor {
         return listOfDuplicates;
     }
 
-    private static File[] loadFiles(final String path, final List<String> extensions) {
+    private File[] loadFiles(final String path, final List<String> extensions) {
         final var directory = new File(path);
         if (!directory.exists() && !directory.isDirectory()) {
             throw new DirectoryUnavailableException(format("No directory found with the stated path: %s", path));

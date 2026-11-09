@@ -6,11 +6,11 @@ import org.hellstrand.renfi.shared.model.CompareImageRequest;
 public class RequestDispatcher {
     private final RequestSender requestSender;
 
-    public RequestDispatcher(RequestSender requestSender) {
+    public RequestDispatcher(final RequestSender requestSender) {
         this.requestSender = requestSender;
     }
 
-    public String dispatch(CompareImageRequest compareImageRequest) {
+    public String dispatch(final CompareImageRequest compareImageRequest) {
         try {
             return requestSender.send(compareImageRequest);
         } catch (RuntimeException e) {
