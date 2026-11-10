@@ -2,7 +2,9 @@ package org.hellstrand.renfi.instructor.service;
 
 import org.hellstrand.renfi.instructor.request.RequestDispatcher;
 import org.hellstrand.renfi.shared.model.CompareImageRequest;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ImageInstructorService {
     private final RequestDispatcher requestDispatcher;
 

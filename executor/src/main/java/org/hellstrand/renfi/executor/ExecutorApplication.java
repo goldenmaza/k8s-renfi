@@ -5,9 +5,11 @@ import org.hellstrand.renfi.executor.service.ImageComparisonService;
 import org.hellstrand.renfi.executor.validator.ImageDimensionValidator;
 import org.hellstrand.renfi.executor.validator.ImageHashValidator;
 import org.hellstrand.renfi.executor.validator.ImagePixelValidator;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.List;
 
+@SpringBootApplication
 public class ExecutorApplication {
     static void main(String... args) {
         // Verifying that the application can run outside the testing environment... This will be

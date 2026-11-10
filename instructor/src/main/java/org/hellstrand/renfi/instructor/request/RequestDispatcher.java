@@ -2,7 +2,9 @@ package org.hellstrand.renfi.instructor.request;
 
 import org.hellstrand.renfi.shared.exception.ConnectionLostException;
 import org.hellstrand.renfi.shared.model.CompareImageRequest;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RequestDispatcher {
     private final RequestSender requestSender;
 

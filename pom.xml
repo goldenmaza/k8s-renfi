@@ -7,11 +7,11 @@
     <!-- +===================================== -->
     <!-- | Section 1: Parent inclusion          -->
     <!-- +===================================== -->
-<!--    <parent>-->
-<!--        <groupId></groupId>-->
-<!--        <artifactId></artifactId>-->
-<!--        <version></version>-->
-<!--    </parent>-->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.2</version>
+    </parent>
 
     <!-- +===================================== -->
     <!-- | Section 2: Project information       -->
@@ -36,25 +36,26 @@
     <!-- | Section 4: Properties                -->
     <!-- +===================================== -->
     <properties>
-        <revision>0.1.0</revision>
+        <revision>0.2.0</revision>
         <changelist>-SNAPSHOT</changelist>
 
         <!-- Project configurations -->
         <java.version>25</java.version>
         <maven.compiler.release>25</maven.compiler.release>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Internal dependencies -->
         <!-- External dependencies -->
-        <spring-boot-dependencies.version>4.1.2</spring-boot-dependencies.version>
-        <kafka-clients.version>4.4.0</kafka-clients.version>
 
         <!-- Plugins -->
         <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.6.1</maven-surefire-plugin.version>
 
         <!-- CVE vulnerabilities -->
-        <logback-cve.version>1.6.6</logback-cve.version>
+        <jackson-2-bom.version>2.23.0</jackson-2-bom.version>
+        <jackson-bom.version>3.3.0</jackson-bom.version>
+        <json-smart.version>2.6.1</json-smart.version>
+        <logback.version>1.6.6</logback.version>
+        <tomcat.version>11.0.27</tomcat.version>
     </properties>
 
     <!-- +===================================== -->
@@ -65,37 +66,12 @@
             <!-- +===================================== -->
             <!-- | CVE vulnerabilities                  -->
             <!-- +===================================== -->
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback-cve.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${logback-cve.version}</version>
-                <scope>compile</scope>
-            </dependency>
-
             <!-- +===================================== -->
             <!-- | Internal dependencies                -->
             <!-- +===================================== -->
             <!-- +===================================== -->
             <!-- | External dependencies                -->
             <!-- +===================================== -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot-dependencies.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>kafka-clients</artifactId>
-                <version>${kafka-clients.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -103,6 +79,17 @@
     <!-- | Section 6: Dependencies              -->
     <!-- +===================================== -->
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <!-- +===================================== -->
