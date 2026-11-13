@@ -45,6 +45,7 @@
 
         <!-- Internal dependencies -->
         <!-- External dependencies -->
+        <reflections.version>0.10.2</reflections.version>
 
         <!-- Plugins -->
         <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
@@ -72,6 +73,11 @@
             <!-- +===================================== -->
             <!-- | External dependencies                -->
             <!-- +===================================== -->
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
