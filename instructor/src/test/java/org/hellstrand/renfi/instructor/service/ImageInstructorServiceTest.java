@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 
 import org.hellstrand.renfi.instructor.request.RequestDispatcher;
 import org.hellstrand.renfi.shared.exception.ConnectionLostException;
-import org.hellstrand.renfi.shared.model.CompareImageRequest;
+import org.hellstrand.renfi.shared.model.request.CompareImageRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

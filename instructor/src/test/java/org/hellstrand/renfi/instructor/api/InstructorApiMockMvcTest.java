@@ -12,7 +12,7 @@ import org.hellstrand.renfi.instructor.model.ApiResponse;
 import org.hellstrand.renfi.instructor.model.InstructionApi;
 import org.hellstrand.renfi.instructor.service.ImageInstructorService;
 import org.hellstrand.renfi.shared.exception.ConnectionLostException;
-import org.hellstrand.renfi.shared.model.CompareImageRequest;
+import org.hellstrand.renfi.shared.model.request.CompareImageRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

@@ -5,7 +5,7 @@ import org.hellstrand.renfi.instructor.model.ApiResponse;
 import org.hellstrand.renfi.instructor.model.InstructionApi;
 import org.hellstrand.renfi.instructor.service.ImageInstructorService;
 import org.hellstrand.renfi.shared.exception.ConnectionLostException;
-import org.hellstrand.renfi.shared.model.CompareImageRequest;
+import org.hellstrand.renfi.shared.model.request.CompareImageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

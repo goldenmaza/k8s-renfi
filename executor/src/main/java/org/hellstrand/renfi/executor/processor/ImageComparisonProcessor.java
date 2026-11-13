@@ -5,7 +5,7 @@ import static java.lang.String.format;
 import org.hellstrand.renfi.executor.service.ImageComparisonService;
 import org.hellstrand.renfi.shared.exception.DirectoryUnavailableException;
 import org.hellstrand.renfi.shared.exception.InsufficientImagesException;
-import org.hellstrand.renfi.shared.model.DuplicatePair;
+import org.hellstrand.renfi.shared.model.response.DuplicatePair;
 
 import javax.imageio.ImageIO;
 import java.io.File;

@@ -1,4 +1,4 @@
-package org.hellstrand.renfi.shared.model;
+package org.hellstrand.renfi.shared.model.request;
 
 import java.util.List;
 
