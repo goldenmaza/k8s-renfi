@@ -34,31 +34,31 @@ public class ImageComparisonProcessorTest {
     @Nested
     public class ProcessorOKCases {
         @Test
-        public void shouldReturnZeroAsThereAreNoDuplicatesInDirectory() {
+        public void shouldReturnZeroAsThereAreNoMatchingInDirectory() {
             // Arrange
             var path = "src/test/resources/compare/images/validateUnique";
             var listOfExtensions = List.of(".png");
             var boundary = 0.0;
 
             // Act
-            var listOfDuplicatePair = imageComparisonProcessor.processDirectory(path, listOfExtensions, boundary);
+            var listOfMatchingPair = imageComparisonProcessor.processDirectory(path, listOfExtensions, boundary);
 
             // Assert
-            assertEquals(0, listOfDuplicatePair.size(), "The processor should have found no duplicates, but it didn't.");
+            assertEquals(0, listOfMatchingPair.size(), "The processor should have found no matches, but it did.");
         }
 
         @Test
-        public void shouldReturnTwoWhenDirectoryHasTwoDuplicateImages() {
+        public void shouldReturnTwoWhenDirectoryHasTwoMatchingPairs() {
             // Arrange
             var path = "src/test/resources/compare/images/validateDuplicate";
             var listOfExtensions = List.of(".png");
             var boundary = 0.0;
 
             // Act
-            var listOfDuplicatePair = imageComparisonProcessor.processDirectory(path, listOfExtensions, boundary);
+            var listOfMatchingPair = imageComparisonProcessor.processDirectory(path, listOfExtensions, boundary);
 
             // Assert
-            assertEquals(2, listOfDuplicatePair.size(), "The processor should have found two duplicate pairs, but it didn't.");
+            assertEquals(2, listOfMatchingPair.size(), "The processor should have found two matching pairs, but it didn't.");
         }
     }
 

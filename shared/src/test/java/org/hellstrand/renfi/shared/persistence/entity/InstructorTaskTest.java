@@ -1,7 +1,6 @@
 package org.hellstrand.renfi.shared.persistence.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.internal.matchers.Null.NULL;
 
@@ -45,7 +44,6 @@ public class InstructorTaskTest extends BasePersistenceTest {
             assertEquals(TaskMedia.IMAGE, taskEntity.getTaskMedia(), "The entity should have the task media set to IMAGE.");
             assertEquals(TaskStatus.PENDING, taskEntity.getTaskStatus(), "The entity should have the task status set to PENDING.");
             assertEquals(REQUEST_JSONB, taskEntity.getRequestPayload(), "The entity should have the expected request payload.");
-            assertNull(taskEntity.getResponsePayload(), "The entity should have null as the response payload.");
         }
     }
 

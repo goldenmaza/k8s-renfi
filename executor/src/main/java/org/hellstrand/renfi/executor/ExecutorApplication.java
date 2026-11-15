@@ -24,9 +24,9 @@ public class ExecutorApplication {
         final var pathUnique = "src/test/resources/compare/images/validateUnique";
         final var listOfExtensions = List.of(".png");
         final var boundary = 0.0;
-        var listOfDuplicatePair = imageComparisonProcessor.processDirectory(pathDuplicate, listOfExtensions, boundary);
-        System.out.println("Should contain two duplicate pairs: " + listOfDuplicatePair);
-        listOfDuplicatePair = imageComparisonProcessor.processDirectory(pathUnique, listOfExtensions, boundary);
-        System.out.println("Should contain zero duplicate pairs: " + listOfDuplicatePair);
+        var listOfMatchingPair = imageComparisonProcessor.processDirectory(pathDuplicate, listOfExtensions, boundary);
+        System.out.println("Should contain two matching pairs: " + listOfMatchingPair);
+        listOfMatchingPair = imageComparisonProcessor.processDirectory(pathUnique, listOfExtensions, boundary);
+        System.out.println("Should contain zero matching pairs: " + listOfMatchingPair);
     }
 }

@@ -45,17 +45,6 @@ public abstract class BaseTaskEntity {
         return requestPayload;
     }
 
-    @Column(name = "response_payload", columnDefinition = "jsonb")
-    private String responsePayload;
-
-    // Remove once we introduce Lombok
-    public void setResponsePayload(String responsePayload) {
-        this.responsePayload = responsePayload;
-    }
-    public String getResponsePayload() {
-        return responsePayload;
-    }
-
     @Column(name = "created_timestamp", nullable = false)
     private OffsetDateTime created;
 

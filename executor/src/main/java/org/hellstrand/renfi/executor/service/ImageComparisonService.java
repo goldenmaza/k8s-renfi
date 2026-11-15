@@ -20,7 +20,7 @@ public class ImageComparisonService {
         this.imagePixelValidator = imagePixelValidator;
     }
 
-    public boolean areImagesDuplicates(
+    public boolean areImagesMatching(
             final BufferedImage primaryImage, final BufferedImage secondaryImage, final double boundary) {
         if (!imageDimensionValidator.areDimensionsIdentical(primaryImage, secondaryImage)) {
             return false;

@@ -43,10 +43,10 @@ public class ImageComparisonServiceTest {
         when(imagePixelValidatorMock.arePixelsWithinBoundary(any(), any(), anyDouble())).thenReturn(true);
 
         // Act
-        var imagesAreDuplicates = imageComparisonService.areImagesDuplicates(primaryImage, secondaryImage, boundary);
+        var imagesAreMatching = imageComparisonService.areImagesMatching(primaryImage, secondaryImage, boundary);
 
         // Assert
-        assertTrue(imagesAreDuplicates, "The images that passed all validators should be seen as duplicates.");
+        assertTrue(imagesAreMatching, "The images that passed all validators should be seen as matching pairs.");
         verify(imageDimensionValidatorMock, times(1)).areDimensionsIdentical(any(), any());
         verify(imageHashValidatorMock, times(1)).arePerceptuallySimilar(any(), any());
         verify(imagePixelValidatorMock, times(1)).arePixelsWithinBoundary(any(), any(), anyDouble());
@@ -58,10 +58,10 @@ public class ImageComparisonServiceTest {
         when(imageDimensionValidatorMock.areDimensionsIdentical(any(), any())).thenReturn(false);
 
         // Act
-        var imagesAreDuplicates = imageComparisonService.areImagesDuplicates(null, null, 0.0);
+        var imagesAreMatching = imageComparisonService.areImagesMatching(null, null, 0.0);
 
         // Assert
-        assertFalse(imagesAreDuplicates, "The images do appear to be duplicates by their dimensions, but they shouldn't.");
+        assertFalse(imagesAreMatching, "The images do appear to be matches by their dimensions, but they shouldn't.");
         verify(imageDimensionValidatorMock, times(1)).areDimensionsIdentical(any(), any());
         verify(imageHashValidatorMock, never()).arePerceptuallySimilar(any(), any());
         verify(imagePixelValidatorMock, never()).arePixelsWithinBoundary(any(), any(), anyDouble());
@@ -74,10 +74,10 @@ public class ImageComparisonServiceTest {
         when(imageHashValidatorMock.arePerceptuallySimilar(any(), any())).thenReturn(false);
 
         // Act
-        var imagesArePerceptuallySimilar = imageComparisonService.areImagesDuplicates(null, null, 0.0);
+        var imagesArePerceptuallySimilar = imageComparisonService.areImagesMatching(null, null, 0.0);
 
         // Assert
-        assertFalse(imagesArePerceptuallySimilar, "The images do appear to be duplicates by their hash, but they shouldn't.");
+        assertFalse(imagesArePerceptuallySimilar, "The images do appear to be matches by their hash, but they shouldn't.");
         verify(imageDimensionValidatorMock, times(1)).areDimensionsIdentical(any(), any());
         verify(imageHashValidatorMock, times(1)).arePerceptuallySimilar(any(), any());
         verify(imagePixelValidatorMock, never()).arePixelsWithinBoundary(any(), any(), anyDouble());
@@ -91,10 +91,10 @@ public class ImageComparisonServiceTest {
         when(imagePixelValidatorMock.arePixelsWithinBoundary(any(), any(), anyDouble())).thenReturn(false);
 
         // Act
-        var imagesArePerceptuallySimilar = imageComparisonService.areImagesDuplicates(null, null, 0.0);
+        var imagesArePerceptuallySimilar = imageComparisonService.areImagesMatching(null, null, 0.0);
 
         // Assert
-        assertFalse(imagesArePerceptuallySimilar, "The images do appear to be duplicates by their pixels, but they shouldn't.");
+        assertFalse(imagesArePerceptuallySimilar, "The images do appear to be matches by their pixels, but they shouldn't.");
         verify(imageDimensionValidatorMock, times(1)).areDimensionsIdentical(any(), any());
         verify(imageHashValidatorMock, times(1)).arePerceptuallySimilar(any(), any());
         verify(imagePixelValidatorMock, times(1)).arePixelsWithinBoundary(any(), any(), anyDouble());

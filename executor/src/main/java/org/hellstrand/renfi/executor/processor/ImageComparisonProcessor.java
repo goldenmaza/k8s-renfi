@@ -5,7 +5,7 @@ import static java.lang.String.format;
 import org.hellstrand.renfi.executor.service.ImageComparisonService;
 import org.hellstrand.renfi.shared.exception.DirectoryUnavailableException;
 import org.hellstrand.renfi.shared.exception.InsufficientImagesException;
-import org.hellstrand.renfi.shared.model.response.DuplicatePair;
+import org.hellstrand.renfi.shared.model.response.MatchingPair;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -21,10 +21,10 @@ public class ImageComparisonProcessor {
         this.imageComparisonService = imageComparisonService;
     }
 
-    public List<DuplicatePair> processDirectory(final String path, final List<String> extensions, final double boundary) {
+    public List<MatchingPair> processDirectory(final String path, final List<String> extensions, final double boundary) {
         Objects.requireNonNull(path, "The directory path stated cannot be null.");
         Objects.requireNonNull(extensions, "The list of extensions cannot be null.");
-        final var listOfDuplicates = new ArrayList<DuplicatePair>();
+        final var listOfMatches = new ArrayList<MatchingPair>();
         final var files = loadFiles(path, extensions);
 
         for (int i = 0; i < files.length; i++) {
@@ -32,8 +32,8 @@ public class ImageComparisonProcessor {
                 try {
                     final var primaryImage = ImageIO.read(files[i]);
                     final var secondaryImage = ImageIO.read(files[j]);
-                    if (imageComparisonService.areImagesDuplicates(primaryImage, secondaryImage, boundary)) {
-                        listOfDuplicates.add(new DuplicatePair(files[i].getName(), files[j].getName()));
+                    if (imageComparisonService.areImagesMatching(primaryImage, secondaryImage, boundary)) {
+                        listOfMatches.add(new MatchingPair(files[i].getName(), files[j].getName()));
                     }
                 } catch (IOException e) {
                     // Just print for now, logging and database handling will be implemented later...
@@ -42,7 +42,7 @@ public class ImageComparisonProcessor {
             }
         }
 
-        return listOfDuplicates;
+        return listOfMatches;
     }
 
     private File[] loadFiles(final String path, final List<String> extensions) {
