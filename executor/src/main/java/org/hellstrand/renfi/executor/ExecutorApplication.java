@@ -1,32 +1,14 @@
 package org.hellstrand.renfi.executor;
 
-import org.hellstrand.renfi.executor.processor.ImageComparisonProcessor;
-import org.hellstrand.renfi.executor.service.ImageComparisonService;
-import org.hellstrand.renfi.executor.validator.ImageDimensionValidator;
-import org.hellstrand.renfi.executor.validator.ImageHashValidator;
-import org.hellstrand.renfi.executor.validator.ImagePixelValidator;
+import org.hellstrand.renfi.shared.SharedAutoConfiguration;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
 
-import java.util.List;
-
+@Import(SharedAutoConfiguration.class)
 @SpringBootApplication
 public class ExecutorApplication {
     static void main(String... args) {
-        // Verifying that the application can run outside the testing environment... This will be
-        // replaced by the Kafka handler that will trigger the flow...
-        final var imageDimensionValidator = new ImageDimensionValidator();
-        final var imageHashValidator = new ImageHashValidator();
-        final var imagePixelValidator = new ImagePixelValidator();
-        final var imageComparisonService = new ImageComparisonService(imageDimensionValidator, imageHashValidator, imagePixelValidator);
-        final var imageComparisonProcessor = new ImageComparisonProcessor(imageComparisonService);
-
-        final var pathDuplicate = "src/test/resources/compare/images/validateDuplicate";
-        final var pathUnique = "src/test/resources/compare/images/validateUnique";
-        final var listOfExtensions = List.of(".png");
-        final var boundary = 0.0;
-        var listOfMatchingPair = imageComparisonProcessor.processDirectory(pathDuplicate, listOfExtensions, boundary);
-        System.out.println("Should contain two matching pairs: " + listOfMatchingPair);
-        listOfMatchingPair = imageComparisonProcessor.processDirectory(pathUnique, listOfExtensions, boundary);
-        System.out.println("Should contain zero matching pairs: " + listOfMatchingPair);
+        SpringApplication.run(ExecutorApplication.class, args);
     }
 }

@@ -23,7 +23,8 @@ public class TaskEnumTest {
         Set<String> approvedEnums = new HashSet<>(List.of(
             TaskType.class.getSimpleName(),
             TaskMedia.class.getSimpleName(),
-            TaskStatus.class.getSimpleName()
+            TaskStatus.class.getSimpleName(),
+            ResultStatus.class.getSimpleName()
         ));
         Set<String> currentEnums = discoveredEnums.stream().map(Class::getSimpleName).collect(Collectors.toSet());
 
@@ -38,6 +39,7 @@ public class TaskEnumTest {
             put(TaskType.class.toString(), TaskType.values());
             put(TaskMedia.class.toString(), TaskType.values());
             put(TaskStatus.class.toString(), TaskType.values());
+            put(ResultStatus.class.toString(), TaskType.values());
         }};
 
         // Act & Assert
