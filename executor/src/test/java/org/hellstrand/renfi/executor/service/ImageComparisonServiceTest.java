@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -13,24 +12,27 @@ import static org.mockito.Mockito.when;
 import org.hellstrand.renfi.executor.validator.ImageDimensionValidator;
 import org.hellstrand.renfi.executor.validator.ImageHashValidator;
 import org.hellstrand.renfi.executor.validator.ImagePixelValidator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.awt.image.BufferedImage;
 
+@ExtendWith(MockitoExtension.class)
 public class ImageComparisonServiceTest {
-    private ImageComparisonService imageComparisonService;
+    @Mock
     private ImageDimensionValidator imageDimensionValidatorMock;
+
+    @Mock
     private ImageHashValidator imageHashValidatorMock;
+
+    @Mock
     private ImagePixelValidator imagePixelValidatorMock;
 
-    @BeforeEach
-    public void setUp() {
-        imageDimensionValidatorMock = mock(ImageDimensionValidator.class);
-        imageHashValidatorMock = mock(ImageHashValidator.class);
-        imagePixelValidatorMock = mock(ImagePixelValidator.class);
-        imageComparisonService = new ImageComparisonService(imageDimensionValidatorMock, imageHashValidatorMock, imagePixelValidatorMock);
-    }
+    @InjectMocks
+    private ImageComparisonService imageComparisonService;
 
     @Test
     public void shouldReturnTrueWhenAllValidatorsPass() {

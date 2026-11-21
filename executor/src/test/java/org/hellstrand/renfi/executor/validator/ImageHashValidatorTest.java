@@ -7,8 +7,13 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class ImageHashValidatorTest {
+    private final ImageHashValidator imageHashValidator = new ImageHashValidator();
+
     @Test
     public void shouldReturnTrueWhenHashMatch() {
         // Arrange
@@ -24,13 +29,25 @@ public class ImageHashValidatorTest {
         secondaryGaphics.fillRect(0, 0, 100, 100);
         secondaryGaphics.fillRect(11, 11, 5, 5); // add another box to increase the bit count
         secondaryGaphics.dispose();
-        var imageHashValidator = new ImageHashValidator();
 
         // Act
         var areLikelyDuplicates = imageHashValidator.arePerceptuallySimilar(primaryImage, secondaryImage);
 
         // Assert
         assertTrue(areLikelyDuplicates, "The images should not match as they have colour differences.");
+    }
+
+    @Test
+    public void shouldReturnTrueWhenHashMatchAsTheyAreTheSameFile() throws IOException {
+        // Arrange
+        var primaryImage = ImageIO.read(new File("src/test/resources/compare/images/validateUnique/100x100_symbol.png"));
+        var secondaryImage = ImageIO.read(new File("src/test/resources/compare/images/validateUnique/100x100_symbol.png"));
+
+        // Act
+        var areLikelyDuplicates = imageHashValidator.arePerceptuallySimilar(primaryImage, secondaryImage);
+
+        // Assert
+        assertTrue(areLikelyDuplicates, "The images should match as they are identical of non-solid color, but they didn't.");
     }
 
     @Test
@@ -46,7 +63,6 @@ public class ImageHashValidatorTest {
         secondaryGaphics.setColor(Color.BLACK);
         secondaryGaphics.fillRect(0, 0, 100, 100);
         secondaryGaphics.dispose();
-        var imageHashValidator = new ImageHashValidator();
 
         // Act
         var areLikelyDuplicates = imageHashValidator.arePerceptuallySimilar(primaryImage, secondaryImage);

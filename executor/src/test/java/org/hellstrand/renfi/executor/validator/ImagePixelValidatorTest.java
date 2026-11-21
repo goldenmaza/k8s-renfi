@@ -9,6 +9,8 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 public class ImagePixelValidatorTest {
+    private final ImagePixelValidator imagePixelValidator =  new ImagePixelValidator();
+
     @Test
     public void shouldReturnTrueWhenPixelsExceedBoundary() {
         // Arrange
@@ -25,7 +27,6 @@ public class ImagePixelValidatorTest {
         secondaryGraphics.fillRect(25, 25, 1, 1); // add another box for pixel validation
         secondaryGraphics.dispose();
         var boundary = 0.05;
-        var imagePixelValidator = new ImagePixelValidator();
 
         // Act
         var pixelsMatch = imagePixelValidator.arePixelsWithinBoundary(primaryImage, secondaryImage, boundary);
@@ -50,7 +51,6 @@ public class ImagePixelValidatorTest {
         secondaryGraphics.fillRect(25, 25, 50, 50); // add another box for pixel validation
         secondaryGraphics.dispose();
         var boundary = 0.05;
-        var imagePixelValidator = new ImagePixelValidator();
 
         // Act
         var pixelsMatch = imagePixelValidator.arePixelsWithinBoundary(primaryImage, secondaryImage, boundary);

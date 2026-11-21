@@ -8,12 +8,13 @@ import org.junit.jupiter.api.Test;
 import java.awt.image.BufferedImage;
 
 public class ImageDimensionValidatorTest {
+    private final ImageDimensionValidator imageDimensionValidator = new ImageDimensionValidator();
+
     @Test
     public void shouldReturnTrueWhenDimensionsMatch() {
         // Arrange
         var primaryImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         var secondaryImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        var imageDimensionValidator = new ImageDimensionValidator();
 
         // Act
         var dimensionsMatch = imageDimensionValidator.areDimensionsIdentical(primaryImage, secondaryImage);
@@ -27,7 +28,6 @@ public class ImageDimensionValidatorTest {
         // Arrange
         var primaryImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         var secondaryImage = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
-        var imageDimensionValidator = new ImageDimensionValidator();
 
         // Act
         var dimensionsMatch = imageDimensionValidator.areDimensionsIdentical(primaryImage, secondaryImage);

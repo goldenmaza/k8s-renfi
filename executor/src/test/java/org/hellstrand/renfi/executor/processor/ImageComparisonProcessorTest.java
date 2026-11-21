@@ -3,33 +3,34 @@ package org.hellstrand.renfi.executor.processor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.hellstrand.renfi.configuration.BasePersistenceTest;
 import org.hellstrand.renfi.executor.service.ImageComparisonService;
 import org.hellstrand.renfi.executor.validator.ImageDimensionValidator;
 import org.hellstrand.renfi.executor.validator.ImageHashValidator;
 import org.hellstrand.renfi.executor.validator.ImagePixelValidator;
 import org.hellstrand.renfi.shared.exception.DirectoryUnavailableException;
 import org.hellstrand.renfi.shared.exception.InsufficientImagesException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public class ImageComparisonProcessorTest {
+public class ImageComparisonProcessorTest extends BasePersistenceTest {
+    @Autowired
     private ImageDimensionValidator imageDimensionValidator;
-    private ImageHashValidator imageHashValidator;
-    private ImagePixelValidator imagePixelValidator;
-    private ImageComparisonService imageComparisonService;
-    private ImageComparisonProcessor imageComparisonProcessor;
 
-    @BeforeEach
-    public void setUp() {
-        imageDimensionValidator = new ImageDimensionValidator();
-        imageHashValidator = new ImageHashValidator();
-        imagePixelValidator = new ImagePixelValidator();
-        imageComparisonService = new ImageComparisonService(imageDimensionValidator, imageHashValidator, imagePixelValidator);
-        imageComparisonProcessor = new ImageComparisonProcessor(imageComparisonService);
-    }
+    @Autowired
+    private ImageHashValidator imageHashValidator;
+
+    @Autowired
+    private ImagePixelValidator imagePixelValidator;
+
+    @Autowired
+    private ImageComparisonService imageComparisonService;
+
+    @Autowired
+    private ImageComparisonProcessor imageComparisonProcessor;
 
     @Nested
     public class ProcessorOKCases {

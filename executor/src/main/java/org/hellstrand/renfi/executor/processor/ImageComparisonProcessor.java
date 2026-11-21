@@ -6,14 +6,16 @@ import org.hellstrand.renfi.executor.service.ImageComparisonService;
 import org.hellstrand.renfi.shared.exception.DirectoryUnavailableException;
 import org.hellstrand.renfi.shared.exception.InsufficientImagesException;
 import org.hellstrand.renfi.shared.model.response.MatchingPair;
+import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.imageio.ImageIO;
 
+@Component
 public class ImageComparisonProcessor {
     private final ImageComparisonService imageComparisonService;
 

@@ -2,7 +2,6 @@ package org.hellstrand.renfi.instructor.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,22 +10,24 @@ import static org.mockito.Mockito.when;
 import org.hellstrand.renfi.instructor.service.ImageInstructorService;
 import org.hellstrand.renfi.shared.exception.ConnectionLostException;
 import org.hellstrand.renfi.shared.model.request.CompareImageRequest;
-import org.junit.jupiter.api.BeforeEach;
+import org.hellstrand.renfi.shared.util.UUIDUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
 
+@ExtendWith(MockitoExtension.class)
 public class ImageInstructorControllerTest {
+    @Mock
     private ImageInstructorService imageInstructorServiceMock;
-    private ImageInstructorController imageInstructorController;
 
-    @BeforeEach
-    public void setUp() {
-        imageInstructorServiceMock = mock(ImageInstructorService.class);
-        imageInstructorController = new ImageInstructorController(imageInstructorServiceMock);
-    }
+    @InjectMocks
+    private ImageInstructorController imageInstructorController;
 
     @Nested
     public class ControllerOKCases {
@@ -38,15 +39,16 @@ public class ImageInstructorControllerTest {
             var boundary = 0.0;
             var compareImageRequest = new CompareImageRequest(pathDuplicate, listOfExtensions, boundary);
             var statusCode = 202;
-            var mockedCorrelationId = "kafka-dispatch-001";
-            when(imageInstructorServiceMock.processRequest(any())).thenReturn(mockedCorrelationId);
+            var generatedCorrelationId = UUIDUtil.generateUUID().toString();
+            when(imageInstructorServiceMock.processRequest(any())).thenReturn(generatedCorrelationId);
 
             // Act
             var controllerResponse = imageInstructorController.handleCompareRequest(compareImageRequest);
 
             // Assert
             assertEquals(statusCode, controllerResponse.getStatusCode().value(), "Request should return HTTP 202 Accepted.");
-            assertEquals(mockedCorrelationId, controllerResponse.getBody().body(), "Response should contain the correlation ID in the body.");
+            assertEquals(generatedCorrelationId, controllerResponse.getBody().body(), "Response should contain the correlation ID in the body.");
+            verify(imageInstructorServiceMock, times(1)).processRequest(any());
         }
     }
 

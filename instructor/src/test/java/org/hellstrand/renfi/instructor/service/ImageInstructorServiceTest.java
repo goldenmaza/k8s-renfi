@@ -1,30 +1,36 @@
 package org.hellstrand.renfi.instructor.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.hellstrand.renfi.instructor.request.RequestDispatcher;
 import org.hellstrand.renfi.shared.exception.ConnectionLostException;
 import org.hellstrand.renfi.shared.model.request.CompareImageRequest;
-import org.junit.jupiter.api.BeforeEach;
+import org.hellstrand.renfi.shared.persistence.TaskRepository;
+import org.hellstrand.renfi.shared.util.UUIDUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+@ExtendWith(MockitoExtension.class)
 public class ImageInstructorServiceTest {
-    private RequestDispatcher requestDispatcherMock;
-    private ImageInstructorService imageInstructorService;
+    @Mock
+    private TaskRepository taskRepositoryMock;
 
-    @BeforeEach
-    public void setUp() {
-        requestDispatcherMock = mock(RequestDispatcher.class);
-        imageInstructorService = new ImageInstructorService(requestDispatcherMock);
-    }
+    @Mock
+    private RequestDispatcher requestDispatcherMock;
+
+    @InjectMocks
+    private ImageInstructorService imageInstructorService;
 
     @Nested
     public class ServiceOKCases {
@@ -35,15 +41,16 @@ public class ImageInstructorServiceTest {
             var listOfExtensions = List.of(".png");
             var boundary = 0.0;
             var compareImageRequest = new CompareImageRequest(pathDuplicate, listOfExtensions, boundary);
-            var dispatchedCorrelationId = "kafka-dispatch-001";
-            when(requestDispatcherMock.dispatch(any())).thenReturn(dispatchedCorrelationId);
+            when(taskRepositoryMock.save(any())).thenReturn(null);
+            when(requestDispatcherMock.dispatch(any(), any())).thenReturn(true);
 
             // Act
             var receivedCorrelationId = imageInstructorService.processRequest(compareImageRequest);
 
             // Assert
-            assertEquals(dispatchedCorrelationId, receivedCorrelationId, "The dispatcher must return the exact correlation ID provided by the sender.");
-            verify(requestDispatcherMock).dispatch(compareImageRequest);
+            assertTrue(UUIDUtil.validateUUID(receivedCorrelationId), "The service must return the exact correlation ID provided by the dispatcher.");
+            verify(taskRepositoryMock, times(1)).save(any());
+            verify(requestDispatcherMock, times(1)).dispatch(any(), any());
         }
     }
 
@@ -53,7 +60,7 @@ public class ImageInstructorServiceTest {
         public void shouldPropagateConnectionLostExceptionWhenDispatcherFails() {
             // Arrange
             var compareImageRequest = new CompareImageRequest(null, null, 0.0);
-            when(requestDispatcherMock.dispatch(any())).thenThrow(new ConnectionLostException("Kafka - lost connection"));
+            when(requestDispatcherMock.dispatch(any(), any())).thenThrow(new ConnectionLostException("Kafka - lost connection"));
 
             // Act & Assert
             assertThrows(ConnectionLostException.class, () -> imageInstructorService.processRequest(compareImageRequest));
@@ -63,7 +70,7 @@ public class ImageInstructorServiceTest {
         public void shouldPropagateUnexpectedRuntimeExceptionWhenDispatcherFails() {
             // Arrange
             var compareImageRequest = new CompareImageRequest(null, null, 0.0);
-            when(requestDispatcherMock.dispatch(any())).thenThrow(new RuntimeException("System - Unknown error"));
+            when(requestDispatcherMock.dispatch(any(), any())).thenThrow(new RuntimeException("System - Unknown error"));
 
             // Act & Assert
             assertThrows(RuntimeException.class, () -> imageInstructorService.processRequest(compareImageRequest));

@@ -1,40 +1,51 @@
 package org.hellstrand.renfi.instructor.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.hellstrand.renfi.instructor.controller.ImageInstructorController;
+import org.hellstrand.renfi.configuration.BasePersistenceTest;
 import org.hellstrand.renfi.instructor.model.ApiResponse;
 import org.hellstrand.renfi.instructor.model.InstructionApi;
+import org.hellstrand.renfi.instructor.request.RequestDispatcher;
+import org.hellstrand.renfi.instructor.request.RequestSender;
 import org.hellstrand.renfi.instructor.service.ImageInstructorService;
 import org.hellstrand.renfi.shared.exception.ConnectionLostException;
 import org.hellstrand.renfi.shared.model.request.CompareImageRequest;
-import org.junit.jupiter.api.BeforeEach;
+import org.hellstrand.renfi.shared.persistence.TaskRepository;
+import org.hellstrand.renfi.shared.util.UUIDUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
 import java.util.List;
 
-public class InstructorApiMockMvcTest {
-    private ImageInstructorService imageInstructorServiceMock;
-    private ImageInstructorController imageInstructorController;
-
+@AutoConfigureMockMvc
+public class InstructorApiMockMvcTest extends BasePersistenceTest {
+    @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
-    public void setUp() {
-        imageInstructorServiceMock = mock(ImageInstructorService.class);
-        imageInstructorController = new ImageInstructorController(imageInstructorServiceMock);
+    @MockitoSpyBean
+    private ImageInstructorService imageInstructorServiceSpy;
 
-        mockMvc = MockMvcBuilders.standaloneSetup(imageInstructorController).build();
-    }
+    @MockitoSpyBean
+    private TaskRepository taskRepositorySpy;
+
+    @MockitoSpyBean
+    private RequestDispatcher requestDispatcherSpy;
+
+    @MockitoBean
+    private RequestSender requestSender;
 
     @Nested
     public class MockOKCases {
@@ -45,8 +56,6 @@ public class InstructorApiMockMvcTest {
             var listOfExtensions = List.of(".png");
             var boundary = 0.0;
             var compareImageRequest = new CompareImageRequest(pathDuplicate, listOfExtensions, boundary);
-            var mockedCorrelationId = "kafka-dispatch-001";
-            when(imageInstructorServiceMock.processRequest(compareImageRequest)).thenReturn(mockedCorrelationId);
 
             // Act
             var mockCall = mockMvc.perform(
@@ -59,7 +68,10 @@ public class InstructorApiMockMvcTest {
             // Assert
             var content = mockCall.getResponse().getContentAsString();
             var apiResponse = InstructionApi.JSON_MAPPER.readValue(content, ApiResponse.class);
-            assertEquals(mockedCorrelationId, apiResponse.body(), "Response should contain the mocked correlation ID.");
+            assertTrue(UUIDUtil.validateUUID(apiResponse.body()), "The service must return the exact correlation ID provided by the dispatcher.");
+            verify(imageInstructorServiceSpy, times(1)).processRequest(any());
+            verify(taskRepositorySpy, times(1)).save(any());
+            verify(requestDispatcherSpy, times(1)).dispatch(any(), any());
         }
     }
 
@@ -85,6 +97,9 @@ public class InstructorApiMockMvcTest {
             var apiResponse = InstructionApi.JSON_MAPPER.readValue(content, ApiResponse.class);
             assertEquals(statusCode, apiResponse.status(), "Request should return HTTP 400 BadRequest.");
             assertEquals(body, apiResponse.body(), "Request should return the BadRequest message for invalid Directory.");
+            verify(imageInstructorServiceSpy, times(0)).processRequest(any());
+            verify(taskRepositorySpy, times(0)).save(any());
+            verify(requestDispatcherSpy, times(0)).dispatch(any(), any());
         }
 
         @Test
@@ -107,6 +122,9 @@ public class InstructorApiMockMvcTest {
             var apiResponse = InstructionApi.JSON_MAPPER.readValue(content, ApiResponse.class);
             assertEquals(statusCode, apiResponse.status(), "Request should return HTTP 400 BadRequest.");
             assertEquals(body, apiResponse.body(), "Request should return the BadRequest message for invalid Directory.");
+            verify(imageInstructorServiceSpy, times(0)).processRequest(any());
+            verify(taskRepositorySpy, times(0)).save(any());
+            verify(requestDispatcherSpy, times(0)).dispatch(any(), any());
         }
 
         @Test
@@ -130,6 +148,9 @@ public class InstructorApiMockMvcTest {
             var apiResponse = InstructionApi.JSON_MAPPER.readValue(content, ApiResponse.class);
             assertEquals(statusCode, apiResponse.status(), "Request should return HTTP 400 BadRequest.");
             assertEquals(body, apiResponse.body(), "Request should return the BadRequest message for invalid ListOfExtensions.");
+            verify(imageInstructorServiceSpy, times(0)).processRequest(any());
+            verify(taskRepositorySpy, times(0)).save(any());
+            verify(requestDispatcherSpy, times(0)).dispatch(any(), any());
         }
 
         @Test
@@ -153,6 +174,9 @@ public class InstructorApiMockMvcTest {
             var apiResponse = InstructionApi.JSON_MAPPER.readValue(content, ApiResponse.class);
             assertEquals(statusCode, apiResponse.status(), "Request should return HTTP 400 BadRequest.");
             assertEquals(body, apiResponse.body(), "Request should return the BadRequest message for invalid ListOfExtensions.");
+            verify(imageInstructorServiceSpy, times(0)).processRequest(any());
+            verify(taskRepositorySpy, times(0)).save(any());
+            verify(requestDispatcherSpy, times(0)).dispatch(any(), any());
         }
 
         @Test
@@ -178,6 +202,9 @@ public class InstructorApiMockMvcTest {
             var apiResponse = InstructionApi.JSON_MAPPER.readValue(content, ApiResponse.class);
             assertEquals(statusCode, apiResponse.status(), "Request should return HTTP 400 BadRequest.");
             assertEquals(body, apiResponse.body(), "Request should return the BadRequest message for invalid Boundary.");
+            verify(imageInstructorServiceSpy, times(0)).processRequest(any());
+            verify(taskRepositorySpy, times(0)).save(any());
+            verify(requestDispatcherSpy, times(0)).dispatch(any(), any());
         }
 
         @Test
@@ -203,6 +230,9 @@ public class InstructorApiMockMvcTest {
             var apiResponse = InstructionApi.JSON_MAPPER.readValue(content, ApiResponse.class);
             assertEquals(statusCode, apiResponse.status(), "Request should return HTTP 400 BadRequest.");
             assertEquals(body, apiResponse.body(), "Request should return the BadRequest message for invalid Boundary.");
+            verify(imageInstructorServiceSpy, times(0)).processRequest(any());
+            verify(taskRepositorySpy, times(0)).save(any());
+            verify(requestDispatcherSpy, times(0)).dispatch(any(), any());
         }
 
         @Test
@@ -214,7 +244,7 @@ public class InstructorApiMockMvcTest {
             var compareImageRequest = new CompareImageRequest(pathDuplicate, listOfExtensions, boundary);
             var statusCode = 500;
             var body = "Internal Server Error";
-            when(imageInstructorServiceMock.processRequest(any())).thenThrow(new RuntimeException(body));
+            doThrow(new RuntimeException(body)).when(imageInstructorServiceSpy).processRequest(any());
 
             // Act
             var mockCall = mockMvc.perform(
@@ -229,6 +259,9 @@ public class InstructorApiMockMvcTest {
             var apiResponse = InstructionApi.JSON_MAPPER.readValue(content, ApiResponse.class);
             assertEquals(statusCode, apiResponse.status(), "Request should return HTTP 500 Internal Server Error.");
             assertEquals(body, apiResponse.body(), "Request should return the Internal Server Error message for any exception thrown.");
+            verify(imageInstructorServiceSpy, times(1)).processRequest(any());
+            verify(taskRepositorySpy, times(0)).save(any());
+            verify(requestDispatcherSpy, times(0)).dispatch(any(), any());
         }
 
         @Test
@@ -240,7 +273,7 @@ public class InstructorApiMockMvcTest {
             var compareImageRequest = new CompareImageRequest(pathDuplicate, listOfExtensions, boundary);
             var statusCode = 503;
             var body = "Kafka - lost connection";
-            when(imageInstructorServiceMock.processRequest(any())).thenThrow(new ConnectionLostException(body));
+            doThrow(new ConnectionLostException(body)).when(imageInstructorServiceSpy).processRequest(any());
 
             // Act
             var mockCall = mockMvc.perform(
@@ -255,6 +288,9 @@ public class InstructorApiMockMvcTest {
             var apiResponse = InstructionApi.JSON_MAPPER.readValue(content, ApiResponse.class);
             assertEquals(statusCode, apiResponse.status(), "Request should return HTTP 503 Service Unavailable.");
             assertEquals(body, apiResponse.body(), "Request should return the Service Unavailable message for a connection exception thrown.");
+            verify(imageInstructorServiceSpy, times(1)).processRequest(any());
+            verify(taskRepositorySpy, times(0)).save(any());
+            verify(requestDispatcherSpy, times(0)).dispatch(any(), any());
         }
     }
 }

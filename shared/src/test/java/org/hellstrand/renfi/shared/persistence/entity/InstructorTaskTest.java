@@ -2,18 +2,20 @@ package org.hellstrand.renfi.shared.persistence.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.internal.matchers.Null.NULL;
 
+import org.hellstrand.renfi.configuration.BasePersistenceTest;
 import org.hellstrand.renfi.shared.model.task.TaskMedia;
 import org.hellstrand.renfi.shared.model.task.TaskStatus;
 import org.hellstrand.renfi.shared.model.task.TaskType;
-import org.hellstrand.renfi.shared.persistence.BasePersistenceTest;
 import org.hellstrand.renfi.shared.persistence.TaskRepository;
+import org.hellstrand.renfi.shared.util.ActionUtil;
 import org.hellstrand.renfi.shared.util.FileUtil;
+import org.hellstrand.renfi.shared.util.UUIDUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.jpa.JpaSystemException;
 
 public class InstructorTaskTest extends BasePersistenceTest {
     private static final String REQUEST_JSONB = FileUtil.loadJsonResource("instructor_task_compare_image.json");
@@ -26,12 +28,17 @@ public class InstructorTaskTest extends BasePersistenceTest {
         @Test
         public void instructorTaskIsComparePendingImageShouldPersist() {
             // Arrange
-            var action = "The task: To " + TaskType.COMPARE + " a(n) " + TaskMedia.IMAGE + " is " + TaskStatus.PENDING;
+            var generatedCorrelationId = UUIDUtil.generateUUID();
+            var taskType = TaskType.COMPARE;
+            var taskMedia = TaskMedia.IMAGE;
+            var taskStatus = TaskStatus.PENDING;
+            var action = ActionUtil.createAction(taskType, taskMedia, taskStatus, generatedCorrelationId);
             var instructorTaskEntity = new InstructorTaskEntity(
+                generatedCorrelationId,
                 action,
-                TaskType.COMPARE,
-                TaskMedia.IMAGE,
-                TaskStatus.PENDING,
+                taskType,
+                taskMedia,
+                taskStatus,
                 REQUEST_JSONB
             );
 
@@ -39,24 +46,53 @@ public class InstructorTaskTest extends BasePersistenceTest {
             var taskEntity = taskRepository.save(instructorTaskEntity);
 
             // Assert
-            assertEquals(action, taskEntity.getAction(), "The entity should have the following action described.");
-            assertEquals(TaskType.COMPARE, taskEntity.getTaskType(), "The entity should have the task type set to COMPARE.");
-            assertEquals(TaskMedia.IMAGE, taskEntity.getTaskMedia(), "The entity should have the task media set to IMAGE.");
-            assertEquals(TaskStatus.PENDING, taskEntity.getTaskStatus(), "The entity should have the task status set to PENDING.");
-            assertEquals(REQUEST_JSONB, taskEntity.getRequestPayload(), "The entity should have the expected request payload.");
+            assertEquals(generatedCorrelationId, taskEntity.getId(), "The entity should have the following CorrelationId.");
+            assertEquals(action, taskEntity.getAction(), "The entity should have the following Action described.");
+            assertEquals(TaskType.COMPARE, taskEntity.getTaskType(), "The entity should have the TaskType set to COMPARE.");
+            assertEquals(TaskMedia.IMAGE, taskEntity.getTaskMedia(), "The entity should have the TaskMedia set to IMAGE.");
+            assertEquals(TaskStatus.PENDING, taskEntity.getTaskStatus(), "The entity should have the TaskStatus set to PENDING.");
+            assertEquals(REQUEST_JSONB, taskEntity.getRequestPayload(), "The entity should have the expected RequestPayload.");
         }
     }
 
     @Nested
-    public class ExceptionOKCases {
+    public class TaskExceptionCases {
+        @Test
+        public void instructorTaskShouldFailSinceCorrelationIdIsNull() {
+            // Arrange
+            var taskType = TaskType.COMPARE;
+            var taskMedia = TaskMedia.IMAGE;
+            var taskStatus = TaskStatus.PENDING;
+            var action = ActionUtil.createAction(taskType, taskMedia, taskStatus, null);
+            var instructorTaskEntity = new InstructorTaskEntity(
+                null,
+                action,
+                taskType,
+                taskMedia,
+                taskStatus,
+                REQUEST_JSONB
+            );
+
+            // Act & Assert
+            assertThrows(
+                JpaSystemException.class,
+                () -> taskRepository.save(instructorTaskEntity),
+                "It shouldn't be allowed for the CorrelationId to be NULL.");
+        }
+
         @Test
         public void instructorTaskShouldFailSinceActionIsNull() {
             // Arrange
+            var generatedCorrelationId = UUIDUtil.generateUUID();
+            var taskType = TaskType.COMPARE;
+            var taskMedia = TaskMedia.IMAGE;
+            var taskStatus = TaskStatus.PENDING;
             var instructorTaskEntity = new InstructorTaskEntity(
+                generatedCorrelationId,
                 null,
-                TaskType.COMPARE,
-                TaskMedia.IMAGE,
-                TaskStatus.PENDING,
+                taskType,
+                taskMedia,
+                taskStatus,
                 REQUEST_JSONB
             );
 
@@ -68,71 +104,19 @@ public class InstructorTaskTest extends BasePersistenceTest {
         }
 
         @Test
-        public void instructorTaskShouldFailSinceTaskTypeIsNull() {
-            // Arrange
-            var action = "The task: To " + NULL + " a(n) " + TaskMedia.IMAGE + " is " + TaskStatus.PENDING;
-            var instructorTaskEntity = new InstructorTaskEntity(
-                action,
-                null,
-                TaskMedia.IMAGE,
-                TaskStatus.PENDING,
-                REQUEST_JSONB
-            );
-
-            // Act & Assert
-            assertThrows(
-                DataIntegrityViolationException.class,
-                () -> taskRepository.save(instructorTaskEntity),
-                "It shouldn't be allowed for the TaskType to be NULL.");
-        }
-
-        @Test
-        public void instructorTaskShouldFailSinceTaskMediaIsNull() {
-            // Arrange
-            var action = "The task: To " + TaskType.COMPARE + " a(n) " + NULL + " is " + TaskStatus.PENDING;
-            var instructorTaskEntity = new InstructorTaskEntity(
-                action,
-                TaskType.COMPARE,
-                null,
-                TaskStatus.PENDING,
-                REQUEST_JSONB
-            );
-
-            // Act & Assert
-            assertThrows(
-                DataIntegrityViolationException.class,
-                () -> taskRepository.save(instructorTaskEntity),
-                "It shouldn't be allowed for the TaskMedia to be NULL.");
-        }
-
-        @Test
-        public void instructorTaskShouldFailSinceTaskStatusIsNull() {
-            // Arrange
-            var action = "The task: To " + TaskType.COMPARE + " a(n) " + TaskMedia.IMAGE + " is " + NULL;
-            var instructorTaskEntity = new InstructorTaskEntity(
-                action,
-                TaskType.COMPARE,
-                TaskMedia.IMAGE,
-                null,
-                REQUEST_JSONB
-            );
-
-            // Act & Assert
-            assertThrows(
-                DataIntegrityViolationException.class,
-                () -> taskRepository.save(instructorTaskEntity),
-                "It shouldn't be allowed for the TaskStatus to be NULL.");
-        }
-
-        @Test
         public void instructorTaskShouldFailSinceRequestPayloadIsNull() {
             // Arrange
-            var action = "The task: To " + TaskType.COMPARE + " a(n) " + TaskMedia.IMAGE + " is " + NULL;
+            var generatedCorrelationId = UUIDUtil.generateUUID();
+            var taskType = TaskType.COMPARE;
+            var taskMedia = TaskMedia.IMAGE;
+            var taskStatus = TaskStatus.PENDING;
+            var action = ActionUtil.createAction(taskType, taskMedia, taskStatus, generatedCorrelationId);
             var instructorTaskEntity = new InstructorTaskEntity(
+                generatedCorrelationId,
                 action,
-                TaskType.COMPARE,
-                TaskMedia.IMAGE,
-                TaskStatus.PENDING,
+                taskType,
+                taskMedia,
+                taskStatus,
                 null
             );
 

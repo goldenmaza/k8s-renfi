@@ -3,9 +3,11 @@ package org.hellstrand.renfi.executor.service;
 import org.hellstrand.renfi.executor.validator.ImageDimensionValidator;
 import org.hellstrand.renfi.executor.validator.ImageHashValidator;
 import org.hellstrand.renfi.executor.validator.ImagePixelValidator;
+import org.springframework.stereotype.Service;
 
 import java.awt.image.BufferedImage;
 
+@Service
 public class ImageComparisonService {
     private final ImageDimensionValidator imageDimensionValidator;
     private final ImageHashValidator imageHashValidator;

@@ -1,7 +1,10 @@
 package org.hellstrand.renfi.executor.validator;
 
+import org.springframework.stereotype.Component;
+
 import java.awt.image.BufferedImage;
 
+@Component
 public class ImagePixelValidator {
     private static final int MAX_COLOR = 255;
     private static final int RGB_CHANNELS = 3;

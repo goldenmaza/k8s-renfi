@@ -1,7 +1,10 @@
 package org.hellstrand.renfi.executor.validator;
 
+import org.springframework.stereotype.Component;
+
 import java.awt.image.BufferedImage;
 
+@Component
 public class ImageHashValidator {
     private static final int RGB_CHANNELS = 3;
     private static final int TARGET_HEIGHT = 8;
