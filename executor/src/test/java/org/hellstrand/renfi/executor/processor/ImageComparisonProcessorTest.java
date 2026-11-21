@@ -79,7 +79,7 @@ public class ImageComparisonProcessorTest extends BasePersistenceTest {
         @Test
         public void shouldThrowExceptionWhenDirectoryIsEmpty() {
             // Arrange
-            var path = "src/test/resources/compare"; // compare folder holding just a directory
+            var path = "/compare"; // compare holding just a directory
             var listOfExtensions = List.of(".png");
             var boundary = 0.0;
 

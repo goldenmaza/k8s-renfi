@@ -6,6 +6,7 @@ import org.hellstrand.renfi.executor.service.ImageComparisonService;
 import org.hellstrand.renfi.shared.exception.DirectoryUnavailableException;
 import org.hellstrand.renfi.shared.exception.InsufficientImagesException;
 import org.hellstrand.renfi.shared.model.response.MatchingPair;
+import org.hellstrand.renfi.shared.util.FileUtil;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -48,7 +49,7 @@ public class ImageComparisonProcessor {
     }
 
     private File[] loadFiles(final String path, final List<String> extensions) {
-        final var directory = new File(path);
+        final var directory = FileUtil.resolveDirectory(path);
         if (!directory.exists() && !directory.isDirectory()) {
             throw new DirectoryUnavailableException(format("No directory found with the stated path: %s", path));
         }

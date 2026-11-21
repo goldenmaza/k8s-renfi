@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import javax.imageio.ImageIO;
 
 public class ImageHashValidatorTest {
@@ -40,11 +40,11 @@ public class ImageHashValidatorTest {
     @Test
     public void shouldReturnTrueWhenHashMatchAsTheyAreTheSameFile() throws IOException {
         // Arrange
-        var primaryImage = ImageIO.read(new File("src/test/resources/compare/images/validateUnique/100x100_symbol.png"));
-        var secondaryImage = ImageIO.read(new File("src/test/resources/compare/images/validateUnique/100x100_symbol.png"));
+        var inputStreamOfResource = Objects.requireNonNull(getClass().getResourceAsStream("/compare/images/validateUnique/100x100_symbol.png"));
+        var primaryImage = ImageIO.read(inputStreamOfResource);
 
         // Act
-        var areLikelyDuplicates = imageHashValidator.arePerceptuallySimilar(primaryImage, secondaryImage);
+        var areLikelyDuplicates = imageHashValidator.arePerceptuallySimilar(primaryImage, primaryImage);
 
         // Assert
         assertTrue(areLikelyDuplicates, "The images should match as they are identical of non-solid color, but they didn't.");

@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaSystemException;
 
-public class ExecutorTaskTest extends BasePersistenceTest {
+public class ExecutorTaskEntityTest extends BasePersistenceTest {
     private static final String RESULT_JSONB = FileUtil.loadJsonResource("instructor_task_compare_image.json");
 
     @Autowired

@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="1 - Executor module (all)" type="JUnit" factoryName="JUnit">
+    <module name="k8s-renfi-executor" />
+    <option name="PACKAGE_NAME" value="org.hellstrand.renfi.executor" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="package" />
+    <dir value="$PROJECT_DIR$/executor/src/test/java" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
