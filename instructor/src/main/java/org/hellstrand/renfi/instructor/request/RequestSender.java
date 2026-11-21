@@ -1,7 +1,7 @@
 package org.hellstrand.renfi.instructor.request;
 
-import org.hellstrand.renfi.shared.model.request.CompareImageRequest;
+import org.hellstrand.renfi.shared.model.request.InstructionRequest;
 
 public interface RequestSender {
-    String send(final CompareImageRequest compareImageRequest);
+    boolean send(final String correlationId, final InstructionRequest instructionRequest);
 }

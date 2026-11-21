@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- +======================================= -->
+    <!-- | Section 1: Parent inclusion            -->
+    <!-- +======================================= -->
+    <parent>
+        <groupId>org.hellstrand</groupId>
+        <artifactId>k8s-renfi</artifactId>
+        <version>${revision}${changelist}</version>
+    </parent>
+
+    <!-- +===================================== -->
+    <!-- | Section 2: Module information        -->
+    <!-- +===================================== -->
+    <artifactId>k8s-renfi-test-configuration</artifactId>
+    <name>k8s-renfi-test-configuration</name>
+    <description>The module provides a centralized location for the shared testing configurations.</description>
+    <packaging>jar</packaging>
+
+    <!-- +===================================== -->
+    <!-- | Section 3: Properties                -->
+    <!-- +===================================== -->
+    <properties>
+    </properties>
+
+    <!-- +============================================== -->
+    <!-- | Section 4: Dependencies (module specific)     -->
+    <!-- +============================================== -->
+    <dependencies>
+        <!-- +===================================== -->
+        <!-- | Internal dependencies                -->
+        <!-- +===================================== -->
+        <!-- +===================================== -->
+        <!-- | External dependencies                -->
+        <!-- +===================================== -->
+        <!-- TEST -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+        </dependency>
+    </dependencies>
+
+    <!-- +======================================= -->
+    <!-- | Section 5: Build (module specific)     -->
+    <!-- +======================================= -->
+    <build>
+        <finalName>${project.artifactId}</finalName>
+
+        <!-- +===================================== -->
+        <!-- | Plugins (module specific)            -->
+        <!-- +===================================== -->
+    </build>
+
+    <!-- +======================================== -->
+    <!-- | Section 6: Profiles (module specific)   -->
+    <!-- +======================================== -->
+    <profiles>
+    </profiles>
+
+</project>

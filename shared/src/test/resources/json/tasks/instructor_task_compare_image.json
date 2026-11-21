@@ -1,4 +1,5 @@
 {
+  "taskType": "compare",
   "directory" : "src/test/resources/compare/images/validateDuplicate",
   "listOfExtensions" : [ ".png" ],
   "boundary" : 0.0

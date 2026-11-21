@@ -1,18 +1,15 @@
-package org.hellstrand.renfi.shared.persistence;
+package org.hellstrand.renfi.configuration;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.hellstrand.renfi.shared.config.TestContainerConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-@DataJpaTest
-@Import(TestContainerConfig.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@SpringBootTest
+@Import(TestContainersConfig.class)
 public abstract class BasePersistenceTest {
     @Autowired
     private PostgreSQLContainer<?> postgreSQLContainer;
