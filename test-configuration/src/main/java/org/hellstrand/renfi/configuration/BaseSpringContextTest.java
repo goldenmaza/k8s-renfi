@@ -12,7 +12,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @Tag("slow")
 @SpringBootTest
 @Import(TestContainersConfig.class)
-public abstract class BasePersistenceTest {
+public abstract class BaseSpringContextTest {
     @Autowired
     private PostgreSQLContainer<?> postgreSQLContainer;
 

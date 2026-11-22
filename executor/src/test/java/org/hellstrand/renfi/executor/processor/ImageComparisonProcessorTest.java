@@ -3,7 +3,7 @@ package org.hellstrand.renfi.executor.processor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.hellstrand.renfi.configuration.BasePersistenceTest;
+import org.hellstrand.renfi.configuration.BaseSpringContextTest;
 import org.hellstrand.renfi.executor.service.ImageComparisonService;
 import org.hellstrand.renfi.executor.validator.ImageDimensionValidator;
 import org.hellstrand.renfi.executor.validator.ImageHashValidator;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public class ImageComparisonProcessorTest extends BasePersistenceTest {
+public class ImageComparisonProcessorTest extends BaseSpringContextTest {
     @Autowired
     private ImageDimensionValidator imageDimensionValidator;
 

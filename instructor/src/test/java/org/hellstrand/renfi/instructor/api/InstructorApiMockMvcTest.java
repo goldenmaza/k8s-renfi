@@ -9,7 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.hellstrand.renfi.configuration.BasePersistenceTest;
+import org.hellstrand.renfi.configuration.BaseSpringContextTest;
 import org.hellstrand.renfi.instructor.model.ApiResponse;
 import org.hellstrand.renfi.instructor.model.InstructionApi;
 import org.hellstrand.renfi.instructor.request.RequestDispatcher;
@@ -31,7 +31,7 @@ import java.util.Collections;
 import java.util.List;
 
 @AutoConfigureMockMvc
-public class InstructorApiMockMvcTest extends BasePersistenceTest {
+public class InstructorApiMockMvcTest extends BaseSpringContextTest {
     @Autowired
     private MockMvc mockMvc;
 

@@ -3,7 +3,7 @@ package org.hellstrand.renfi.shared.persistence.entity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.hellstrand.renfi.configuration.BasePersistenceTest;
+import org.hellstrand.renfi.configuration.BaseSpringContextTest;
 import org.hellstrand.renfi.shared.model.task.ResultStatus;
 import org.hellstrand.renfi.shared.persistence.ResultRepository;
 import org.hellstrand.renfi.shared.util.FileUtil;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaSystemException;
 
-public class ExecutorTaskEntityTest extends BasePersistenceTest {
+public class ExecutorTaskEntityTest extends BaseSpringContextTest {
     private static final String RESULT_JSONB = FileUtil.loadJsonResource("instructor_task_compare_image.json");
 
     @Autowired
