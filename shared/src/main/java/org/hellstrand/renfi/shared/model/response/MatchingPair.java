@@ -1,4 +1,11 @@
 package org.hellstrand.renfi.shared.model.response;
 
-public record MatchingPair(String primaryFilename, String secondaryFilename) {
+import jakarta.validation.constraints.NotBlank;
+
+public record MatchingPair(
+    @NotBlank(message = "The parameter 'PrimaryFilename' is required.")
+    String primaryFilename,
+
+    @NotBlank(message = "The parameter 'SecondaryFilename' is required.")
+    String secondaryFilename) {
 }

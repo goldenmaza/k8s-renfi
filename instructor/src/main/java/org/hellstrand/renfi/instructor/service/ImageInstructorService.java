@@ -1,6 +1,5 @@
 package org.hellstrand.renfi.instructor.service;
 
-import org.hellstrand.renfi.instructor.model.InstructionApi;
 import org.hellstrand.renfi.instructor.request.RequestDispatcher;
 import org.hellstrand.renfi.shared.model.request.CompareImageRequest;
 import org.hellstrand.renfi.shared.model.request.InstructionRequest;
@@ -37,12 +36,11 @@ public class ImageInstructorService {
     private InstructorTaskEntity createTaskEntity(final UUID correlationId, final InstructionRequest instructionRequest) {
         return switch (instructionRequest) {
             case CompareImageRequest _ -> {
-                var requestPayload = InstructionApi.JSON_MAPPER.writeValueAsString(instructionRequest);
                 var taskType = taskType(instructionRequest);
                 var taskMedia = taskMedia(instructionRequest);
                 var taskStatus = TaskStatus.PENDING;
                 var action = ActionUtil.createAction(taskType, taskMedia, taskStatus, correlationId);
-                yield new InstructorTaskEntity(correlationId, action, taskType, taskMedia, taskStatus, requestPayload);
+                yield new InstructorTaskEntity(correlationId, action, taskType, taskMedia, taskStatus, instructionRequest);
             }
         };
     }

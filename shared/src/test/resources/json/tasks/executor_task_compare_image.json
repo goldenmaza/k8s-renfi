@@ -1,0 +1,8 @@
+{
+  "taskType": "compare",
+  "correlationId" : "ee6dbdc5-860f-484d-a400-a64059d01d0c",
+  "resultStatus" : "PROCESSING",
+  "listOfMatchingPair" : [],
+  "processingTime" : 1000,
+  "failureMessage" : "TBD"
+}

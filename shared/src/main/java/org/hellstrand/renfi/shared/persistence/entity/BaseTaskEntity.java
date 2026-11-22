@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @MappedSuperclass
 public abstract class BaseTaskEntity {
     @Id
+    @NotNull(message = "The field 'CorrelationId' is required.")
     @Column(unique = true, nullable = false)
     private UUID id;
 

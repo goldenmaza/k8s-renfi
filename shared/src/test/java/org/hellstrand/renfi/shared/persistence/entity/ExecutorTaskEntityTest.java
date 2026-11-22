@@ -1,80 +1,115 @@
 package org.hellstrand.renfi.shared.persistence.entity;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.hellstrand.renfi.configuration.BaseSpringContextTest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import org.hellstrand.renfi.shared.model.response.CompareImageResult;
 import org.hellstrand.renfi.shared.model.task.ResultStatus;
-import org.hellstrand.renfi.shared.persistence.ResultRepository;
 import org.hellstrand.renfi.shared.util.FileUtil;
+import org.hellstrand.renfi.shared.util.JacksonUtil;
 import org.hellstrand.renfi.shared.util.UUIDUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.orm.jpa.JpaSystemException;
 
-public class ExecutorTaskEntityTest extends BaseSpringContextTest {
-    private static final String RESULT_JSONB = FileUtil.loadJsonResource("instructor_task_compare_image.json");
+import java.util.Collections;
 
-    @Autowired
-    private ResultRepository resultRepository;
+public class ExecutorTaskEntityTest {
+    private static final String RESULT_JSONB = FileUtil.loadJsonResource("executor_task_compare_image.json");
+
+    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Nested
-    public class ResultOKCases {
+    public class EntityOKCases {
         @Test
-        public void executorTaskIsComparePendingImageShouldPersist() {
+        public void executorTaskEntityIsValidWithAllFields() {
             // Arrange
             var generatedCorrelationId = UUIDUtil.generateUUID();
-            var executorTaskEntity = new ExecutorTaskEntity(
-                generatedCorrelationId,
-                ResultStatus.PROCESSING,
-                RESULT_JSONB
-            );
+            var resultStatus = ResultStatus.PROCESSING;
+            var compareImageResult = JacksonUtil.fromJson(RESULT_JSONB, CompareImageResult.class);
 
             // Act
-            var resultEntity = resultRepository.save(executorTaskEntity);
+            var executorTaskEntity = new ExecutorTaskEntity(
+                generatedCorrelationId,
+                resultStatus,
+                compareImageResult
+            );
 
             // Assert
-            assertEquals(generatedCorrelationId, resultEntity.getId(), "The entity should have the following CorrelationId.");
-            assertEquals(ResultStatus.PROCESSING, resultEntity.getResultStatus(), "The entity should have the ResultStatus set to PROCESSING.");
-            assertEquals(RESULT_JSONB, resultEntity.getResultPayload(), "The entity should have the expected ResultPayload.");
+            assertEquals(generatedCorrelationId, executorTaskEntity.getId(), "The entity should have the following CorrelationId, but it didn't.");
+            assertEquals(ResultStatus.PROCESSING, executorTaskEntity.getResultStatus(), "The entity should have the ResultStatus set to PROCESSING, but it didn't.");
+            assertEquals(compareImageResult, executorTaskEntity.getResultPayload(), "The entity should have the expected ResultPayload, but it didn't.");
         }
     }
 
     @Nested
-    public class ResultExceptionCases {
+    public class EntityExceptionCases {
         @Test
-        public void instructorTaskShouldFailSinceCorrelationIdIsNull() {
+        public void executorTaskEntityShouldFailSinceAllRequiredFieldsAreNull() {
             // Arrange
-            var executorTaskEntity = new ExecutorTaskEntity(
+            var executorTaskEntityInvalid = new ExecutorTaskEntity(
                 null,
-                ResultStatus.PROCESSING,
-                RESULT_JSONB
-            );
-
-            // Act & Assert
-            assertThrows(
-                JpaSystemException.class,
-                () -> resultRepository.save(executorTaskEntity),
-                "It shouldn't be allowed for the CorrelationId to be NULL.");
-        }
-
-        @Test
-        public void instructorTaskShouldFailSinceResultPayloadIsNull() {
-            // Arrange
-            var generatedCorrelationId = UUIDUtil.generateUUID();
-            var executorTaskEntity = new ExecutorTaskEntity(
-                generatedCorrelationId,
-                ResultStatus.PROCESSING,
+                null,
                 null
             );
 
-            // Act & Assert
-            assertThrows(
-                DataIntegrityViolationException.class,
-                () -> resultRepository.save(executorTaskEntity),
-                "It shouldn't be allowed for the ResultPayload to be NULL.");
+            // Act
+            var invalidEntityViolations = validator.validate(executorTaskEntityInvalid);
+
+            // Assert
+            assertThat(invalidEntityViolations).isNotEmpty();
+            assertThat(invalidEntityViolations).hasSize(3);
+            var violationMessages = invalidEntityViolations.stream().map(ConstraintViolation::getMessage).toList();
+            assertThat(violationMessages).containsExactlyInAnyOrder(
+                "The field 'CorrelationId' is required.",
+                "The field 'ResultStatus' is required.",
+                "The field 'ResultPayload' is required."
+            );
+        }
+
+        @Test
+        public void executorTaskEntityShouldFailSinceResultPayloadIsInvalid() {
+            // Arrange
+            var generatedCorrelationId = UUIDUtil.generateUUID();
+            var resultStatus = ResultStatus.PROCESSING;
+            var compareImageResultInvalidNegativeTime = new CompareImageResult(null, null, null, -1, null);
+            var compareImageResultInvalidZeroTime = new CompareImageResult("", resultStatus, Collections.emptyList(), 0, "");
+            var executorTaskEntityNegative = new ExecutorTaskEntity(
+                generatedCorrelationId,
+                resultStatus,
+                compareImageResultInvalidNegativeTime
+            );
+            var executorTaskEntityZero = new ExecutorTaskEntity(
+                generatedCorrelationId,
+                resultStatus,
+                compareImageResultInvalidZeroTime
+            );
+
+            // Act
+            var invalidNegativeTimeViolations = validator.validate(executorTaskEntityNegative);
+            var invalidZeroTimeViolations = validator.validate(executorTaskEntityZero);
+
+            // Assert
+            assertThat(invalidNegativeTimeViolations).isNotEmpty();
+            assertThat(invalidNegativeTimeViolations).hasSize(5);
+            var violationMessages = invalidNegativeTimeViolations.stream().map(ConstraintViolation::getMessage).toList();
+            assertThat(violationMessages).containsExactlyInAnyOrder(
+                "The parameter 'CorrelationId' is required.",
+                "The parameter 'ResultStatus' is required.",
+                "The parameter 'ListOfMatchingPair' is required.",
+                "The parameter 'ProcessingTime' should be a positive number.",
+                "The parameter 'FailureMessage' is required."
+            );
+            assertThat(invalidZeroTimeViolations).isNotEmpty();
+            assertThat(invalidZeroTimeViolations).hasSize(3);
+            violationMessages = invalidZeroTimeViolations.stream().map(ConstraintViolation::getMessage).toList();
+            assertThat(violationMessages).containsExactlyInAnyOrder(
+                "The parameter 'CorrelationId' is required.",
+                "The parameter 'ProcessingTime' should be a positive number.",
+                "The parameter 'FailureMessage' is required."
+            );
         }
     }
 }

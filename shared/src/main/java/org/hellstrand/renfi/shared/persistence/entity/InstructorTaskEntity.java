@@ -5,6 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import org.hellstrand.renfi.shared.model.request.InstructionRequest;
 import org.hellstrand.renfi.shared.model.task.TaskMedia;
 import org.hellstrand.renfi.shared.model.task.TaskStatus;
 import org.hellstrand.renfi.shared.model.task.TaskType;
@@ -16,6 +21,8 @@ import java.util.UUID;
 @Table(name = "instructor_task")
 @Entity
 public class InstructorTaskEntity extends BaseTaskEntity {
+    @Size(max = 255)
+    @NotBlank(message = "The field 'Action' is required.")
     @Column(name = "action", nullable = false)
     private String action;
 
@@ -27,6 +34,7 @@ public class InstructorTaskEntity extends BaseTaskEntity {
         return action;
     }
 
+    @NotNull(message = "The field 'TaskType' is required.")
     @Enumerated(EnumType.STRING)
     @Column(name = "task_type", nullable = false)
     private TaskType taskType;
@@ -39,6 +47,7 @@ public class InstructorTaskEntity extends BaseTaskEntity {
         return taskType;
     }
 
+    @NotNull(message = "The field 'TaskMedia' is required.")
     @Enumerated(EnumType.STRING)
     @Column(name = "task_media", nullable = false)
     private TaskMedia taskMedia;
@@ -51,6 +60,7 @@ public class InstructorTaskEntity extends BaseTaskEntity {
         return taskMedia;
     }
 
+    @NotNull(message = "The field 'TaskStatus' is required.")
     @Enumerated(EnumType.STRING)
     @Column(name = "task_status", nullable = false)
     private TaskStatus taskStatus;
@@ -63,21 +73,23 @@ public class InstructorTaskEntity extends BaseTaskEntity {
         return taskStatus;
     }
 
+    @Valid
+    @NotNull(message = "The field 'RequestPayload' is required.")
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "request_payload", nullable = false, columnDefinition = "jsonb")
-    private String requestPayload;
+    private InstructionRequest requestPayload;
 
     // Remove once we introduce Lombok
-    public void setRequestPayload(String requestPayload) {
+    public void setRequestPayload(InstructionRequest requestPayload) {
         this.requestPayload = requestPayload;
     }
-    public String getRequestPayload() {
+    public InstructionRequest getRequestPayload() {
         return requestPayload;
     }
 
     // Remove once we introduce Lombok
     public InstructorTaskEntity() {}
-    public InstructorTaskEntity(UUID correlationId, String action, TaskType taskType, TaskMedia taskMedia, TaskStatus taskStatus, String requestPayload) {
+    public InstructorTaskEntity(UUID correlationId, String action, TaskType taskType, TaskMedia taskMedia, TaskStatus taskStatus, InstructionRequest requestPayload) {
         this.setId(correlationId);
         this.setAction(action);
         this.setTaskType(taskType);
